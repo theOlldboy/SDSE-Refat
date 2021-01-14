@@ -24,7 +24,7 @@ const LoginForm = () => {
    return (
        <Container>
         <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
-        <Container>
+        <Container class="card-Container">
         <Card>
         <Form tag="form" onSubmit={formik.handleSubmit}>
             <CardHeader>Seja bem vindo!</CardHeader>
