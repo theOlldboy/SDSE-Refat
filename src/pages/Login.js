@@ -5,7 +5,8 @@ import {Button, Form, FormGroup, Label, Input, Container, Row, Col, Alert, Card,
 import * as Yup from 'yup';
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
-import { login, getuser } from '../services/api';
+import { login } from '../services/auth';
+import api from '../services/api';
 
 export default function Login () {
  
@@ -13,52 +14,47 @@ export default function Login () {
      const formik = useFormik({
         initialValues: {
             cnpj: '',
-            senha: '',
+            password: '',
         },
         validationSchema: Yup.object({
             cnpj: Yup.string().required('Campo Obrigatório!'),
             senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
         }),
-        onSubmit: values => {
+        onSubmit: async values => {
           // Aqui vem a comunicação com a API
-          handleSubmit = async (e) => { //método responsável por interceptar o submit do form
-            e.preventDefault(); //evita comportamentos padrões do submit
+            values.preventDefault(); //evita comportamentos padrões do submit
     
-            const email = this.state.username;
-            const password = this.state.password;
+            const cnpj = this.values.cnpj;
+            const password = this.values.password;
     
-            if (email == "") return;// verifica se algo foi digitado para continuar processamento
-            if (password == "") return;
+            if (cnpj === "") return;// verifica se algo foi digitado para continuar processamento
+            if (password === "") return;
     
             await api.post('login/', {
-                email,
+                cnpj,
                 password
             }).then( response => {
                 login(response.data);
-                if (getUser().userTypeId == 2){
-                    this.props.history.push('/busca');
-                }else {
-                    this.props.history.push('/meu_perfil');
-                }
             })
             .catch(error => {
-                toast.configure()
-                toast.error(error.response.data.message,{
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true
-                    });
-                this.setState({
-                    username: '',
-                    password: '',
-                })
+              alert(error.response.data.message);
+                // toast.configure()
+                // toast.error(error.response.data.message,{
+                //     position: "top-right",
+                //     autoClose: 5000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true
+                //     });
+                // this.setState({
+                //     username: '',
+                //     password: '',
+                // })
             })
-        };
-            alert(JSON.stringify(values, null, 2));
-          },
+        }
+          //   alert(JSON.stringify(values, null, 2));
         });
+
    return (
        <Container>
         <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
@@ -96,7 +92,7 @@ export default function Login () {
             <Row>
               <Col xs="12">
             <Input 
-            id="senha"
+            id="password"
             type="password"
             placeholder=""
             {...formik.getFieldProps('senha')}
@@ -113,7 +109,7 @@ export default function Login () {
             </FormGroup>
             
             <Row xs="2">
-            <Col><Button>Acessar</Button></Col>
+            <Col><Button onClick={this.onSubmit}>Acessar</Button></Col>
             <Col className="text-sm"><CardLink>Esqueceu sua senha?</CardLink></Col>
             <Col></Col>
             <Col className="text-sm"><CardLink>Primeiro Acesso?</CardLink></Col>

@@ -3,7 +3,6 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
-import { Container} from 'reactstrap';
 import './styles.css';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
