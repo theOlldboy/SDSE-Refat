@@ -1,12 +1,15 @@
 import React from 'react';
 import '../styles.css';
 import { useFormik } from 'formik';
-import {Button, Form, FormGroup, Label, Input, FormText, Container, Row, Col, Alert, Card, CardBody, CardHeader, CardFooter, Badge, CardLink} from 'reactstrap';
+import {Button, Form, FormGroup, Label, Input, Container, Row, Col, Alert, Card, CardBody, CardHeader, Badge, CardLink} from 'reactstrap';
 import * as Yup from 'yup';
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
+import { login, getuser } from '../services/api';
 
-const LoginForm = () => {
+export default function Login () {
+ 
+  const LoginForm = () => {
      const formik = useFormik({
         initialValues: {
             cnpj: '',
@@ -18,13 +21,48 @@ const LoginForm = () => {
         }),
         onSubmit: values => {
           // Aqui vem a comunicação com a API
+          handleSubmit = async (e) => { //método responsável por interceptar o submit do form
+            e.preventDefault(); //evita comportamentos padrões do submit
+    
+            const email = this.state.username;
+            const password = this.state.password;
+    
+            if (email == "") return;// verifica se algo foi digitado para continuar processamento
+            if (password == "") return;
+    
+            await api.post('login/', {
+                email,
+                password
+            }).then( response => {
+                login(response.data);
+                if (getUser().userTypeId == 2){
+                    this.props.history.push('/busca');
+                }else {
+                    this.props.history.push('/meu_perfil');
+                }
+            })
+            .catch(error => {
+                toast.configure()
+                toast.error(error.response.data.message,{
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true
+                    });
+                this.setState({
+                    username: '',
+                    password: '',
+                })
+            })
+        };
             alert(JSON.stringify(values, null, 2));
           },
         });
    return (
        <Container>
         <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
-        <Container class="card-Container">
+        <Container>
         <Card>
         <Form tag="form" onSubmit={formik.handleSubmit}>
             <CardHeader>Seja bem vindo!</CardHeader>
@@ -33,7 +71,7 @@ const LoginForm = () => {
           <FormGroup>
             <Label for="cnpj">CNPJ</Label>
             <Row>
-              <Col xs="10">
+              <Col xs="12">
             <Input
             tag={MaskedInput}
             mask={cnpjMask}
@@ -45,7 +83,7 @@ const LoginForm = () => {
              </Col>
              </Row>
              <Row>
-               <Col xs="10">
+               <Col xs="12">
             {formik.touched.cnpj && formik.errors.cnpj ? (
          <div><Alert color="danger">{formik.errors.cnpj}</Alert></div>
        ) : null}
@@ -56,7 +94,7 @@ const LoginForm = () => {
             <FormGroup>
             <Label for="senha">Senha</Label>
             <Row>
-              <Col xs="10">
+              <Col xs="12">
             <Input 
             id="senha"
             type="password"
@@ -66,24 +104,26 @@ const LoginForm = () => {
               </Col>
             </Row>
             <Row>
-              <Col xs="10">
+              <Col xs="12">
                 {formik.touched.senha && formik.errors.senha ? (
          <div><Alert color="danger">{formik.errors.senha}</Alert></div>
        ) : null}
               </Col>
             </Row>
             </FormGroup>
-
-            <Button>Acessar</Button>
-            <Button className="btn float-right">Esqueci minha Senha</Button>
-            <div align="right"><CardLink>Primeiro Acesso?</CardLink></div>
+            
+            <Row xs="2">
+            <Col><Button>Acessar</Button></Col>
+            <Col className="text-sm"><CardLink>Esqueceu sua senha?</CardLink></Col>
+            <Col></Col>
+            <Col className="text-sm"><CardLink>Primeiro Acesso?</CardLink></Col>
+            </Row>
+            
             </CardBody>
-            <CardFooter className="text-center">Secretaria de Obras do Distrito Federal <div>CopyRigth @ 2020</div></CardFooter>
         </Form>
         </Card>
         </Container>
         </Container>
         )
 }
-
-export default LoginForm;
+}
