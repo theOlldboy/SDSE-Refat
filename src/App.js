@@ -4,6 +4,8 @@ import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
 import './styles.css';
+import { Container } from 'reactstrap';
+import  Footer  from './components/footer';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -27,9 +29,7 @@ class App extends Component {
     return routes.map((prop, key) => {
         if (!!prop.isAuth) {
           if (getUser() !== null) {
-            if (getUser().userTypeId !== prop.isAuth) {
               return (<Redirect from={prop.path} to={prop.notPath} />);
-            }
           } 
           return (
             <PrivateRoute
@@ -55,8 +55,8 @@ class App extends Component {
   render() {
     return (
      <BrowserRouter>
-      <Switch> 
-      {this.getRoutes(routes)}      
+      <Switch>
+        <Container className="main">{this.getRoutes(routes)} <Footer /></Container>      
       </Switch>
      </BrowserRouter>
     );

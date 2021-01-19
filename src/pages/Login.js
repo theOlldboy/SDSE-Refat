@@ -12,29 +12,28 @@ import api from '../services/api';
      const formik = useFormik({
         initialValues: {
             cnpj: '',
-            password: '',
+            senha: '',
         },
         validationSchema: Yup.object({
             cnpj: Yup.string().required('Campo Obrigatório!'),
-            password: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
+            senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
         }),
+
         onSubmit: async values => {
-            values.preventDefault(); //evita comportamentos padrões do submit
+             //evita comportamentos padrões do submit
     
-            const cnpj = this.values.cnpj;
-            const password = this.values.password;
-    
-            if (cnpj === "") return;// verifica se algo foi digitado para continuar processamento
-            if (password === "") return;
+            const cnpj = values.cnpj;
+            const senha = values.senha;
     
             await api.post('login/', {
                 cnpj,
-                password
+                senha
             }).then( response => {
                 login(response.data);
             })
             .catch(error => {
               alert(error.response.data.message);
+              console.log(values);
                 // toast.configure()
                 // toast.error(error.response.data.message,{
                 //     position: "top-right",
@@ -86,28 +85,28 @@ import api from '../services/api';
             </FormGroup>
 
             <FormGroup>
-            <Label for="password">Senha</Label>
+            <Label for="senha">Senha</Label>
             <Row>
               <Col xs="12">
             <Input 
-            id="password"
+            id="senha"
             type="password"
             placeholder=""
-            {...formik.getFieldProps('password')}
+            {...formik.getFieldProps('senha')}
             />
               </Col>
             </Row>
             <Row>
               <Col xs="12">
-                {formik.touched.password && formik.errors.password ? (
-         <div><Alert color="danger">{formik.errors.password}</Alert></div>
+                {formik.touched.senha && formik.errors.senha ? (
+         <div><Alert color="danger">{formik.errors.senha}</Alert></div>
        ) : null}
               </Col>
             </Row>
             </FormGroup>
             
             <Row xs="2">
-            <Col><Button type="submit">Acessar</Button></Col>
+            <Col><Button>Acessar</Button></Col>
             <Col className="text-sm"><CardLink>Esqueceu sua senha?</CardLink></Col>
             <Col></Col>
             <Col className="text-sm"><CardLink>Primeiro Acesso?</CardLink></Col>
