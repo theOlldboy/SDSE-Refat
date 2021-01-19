@@ -11,7 +11,6 @@ var routes = [
         path: "/inicio",
         name: "Inicio",
         component: Inicio,
-        isAuth: 1,
         notPath: "/login"
     }
 ];
