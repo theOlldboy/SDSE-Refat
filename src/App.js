@@ -29,7 +29,6 @@ class App extends Component {
     return routes.map((prop, key) => {
         if (!!prop.isAuth) {
           if (getUser() !== null) {
-              return (<Redirect from={prop.path} to={prop.notPath} />);
           } 
           return (
             <PrivateRoute
@@ -56,7 +55,7 @@ class App extends Component {
     return (
      <BrowserRouter>
       <Switch>
-        <Container className="main">{this.getRoutes(routes)} <Footer /></Container>      
+        {this.getRoutes(routes)}
       </Switch>
      </BrowserRouter>
     );

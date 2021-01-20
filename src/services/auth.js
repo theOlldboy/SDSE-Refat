@@ -1,3 +1,4 @@
+
 export const USER_KEY = "@user-sdse";
 export const isAuthenticated = () => localStorage.getItem(USER_KEY) !== null;
 
@@ -22,20 +23,20 @@ export const getUser = () => {
     return JSON.parse(userStr);
 };
 
-// Não será necessário no momento!
-// export const setUser = ({name, email, phones}) => {
-//     const userStr = localStorage.getItem(USER_KEY);
-//     if (!userStr) {
-//         return null;
-//     }
+// Atualizar mais pra frente
+export const setUser = ({name, email, phones}) => {
+    const userStr = localStorage.getItem(USER_KEY);
+    if (!userStr) {
+        return null;
+    }
 
-//     let user = JSON.parse(userStr);
-//     user.name = name;
-//     user.email = email;
-//     user.phones = phones;
+    let user = JSON.parse(userStr);
+    user.name = name;
+    user.email = email;
+    user.phones = phones;
 
-//     localStorage.setItem(USER_KEY, JSON.stringify(user));
-// };
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+};
 
 export const login = payload => {
     const currentUser = Object.assign({}, payload.user, { token: payload.access_token });
@@ -45,4 +46,5 @@ export const login = payload => {
 
 export const logout = () => {
     localStorage.removeItem(USER_KEY);
-};
+}
+;
