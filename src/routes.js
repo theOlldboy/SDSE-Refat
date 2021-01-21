@@ -11,8 +11,8 @@ var routes = [
     {
         path: "/inicio",
         name: "Inicio",
-        component: Inicio,
-        notPath: "/login"
+        isAuth: true,
+        component: Inicio
     },
     {
         path: "/teste",

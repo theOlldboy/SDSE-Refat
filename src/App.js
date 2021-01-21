@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect, Router} from 'react-router-dom';
 import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
@@ -28,17 +28,13 @@ class App extends Component {
   getRoutes = routes => {
     return routes.map((prop, key) => {
         if (!!prop.isAuth) {
-          if (getUser() !== null) {
-          } 
-          return (
-            <PrivateRoute
+            return (<PrivateRoute
               path={prop.path}
               component={prop.component}
               key={key}
-            />
-          );
+            />);
         }
-        if((prop.path === '/login' || prop.path === '/cadastro_usuario') && getUser() !== null){
+        if((prop.path === '/login' || prop.path === '/redef_senha') && getUser() !== null){
           return (<Redirect from={prop.path} to='/inicio' />);
         }
         return (
@@ -46,7 +42,8 @@ class App extends Component {
             path={prop.path}
             component={prop.component}
             key={key}
-          />
+          >
+          </Route>
         );
     });
   };
@@ -56,6 +53,7 @@ class App extends Component {
      <BrowserRouter>
       <Switch>
         {this.getRoutes(routes)}
+        <Redirect from="/" to="/login"/>
       </Switch>
      </BrowserRouter>
     );
