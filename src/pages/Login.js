@@ -7,7 +7,8 @@ import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
 import { login } from '../services/auth';
 import api from '../services/api';
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import Footer from '../components/Footer/footer';
 
 
 
@@ -48,7 +49,7 @@ import { useHistory } from "react-router-dom";
 
   
   return (
-    <Container>
+    <Container className="main">
       
       <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
       <Container>
@@ -101,8 +102,8 @@ import { useHistory } from "react-router-dom";
               </FormGroup>
 
               <Row xs="2">
-                <Col><Button type="submit" disabled={formik.isSubmitting}>Acessar</Button></Col>
-                <Col className="text-sm"><CardLink>Esqueceu sua senha?</CardLink></Col>
+                <Col><Button type="submit">Acessar</Button></Col>
+                <Col className="text-sm"><CardLink><Link to="/redef_senha">Esqueceu sua senha?</Link></CardLink></Col>
                 <Col></Col>
                 <Col className="text-sm"><CardLink>Primeiro Acesso?</CardLink></Col>
               </Row>
@@ -112,6 +113,7 @@ import { useHistory } from "react-router-dom";
 
         </Card>
       </Container>
+      <Footer />
     </Container>
   );
 }

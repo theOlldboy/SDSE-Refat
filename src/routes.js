@@ -1,6 +1,6 @@
 import Login from './pages/Login';
 import Inicio from './pages/Inicio';
-import Teste from './pages/Teste';
+import RedefSenha from './pages/Redef-senha';
 
 var routes = [
     {
@@ -15,9 +15,9 @@ var routes = [
         component: Inicio
     },
     {
-        path: "/teste",
-        name: "Teste",
-        component: Teste
+        path: "/redef_senha",
+        name: "RedefSenha",
+        component: RedefSenha
     }
 ];
 export default routes;

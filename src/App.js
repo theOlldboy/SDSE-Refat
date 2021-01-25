@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {BrowserRouter, Switch, Route, Redirect, Router} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
 import './styles.css';
 import { Container } from 'reactstrap';
-import  Footer  from './components/footer';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -52,8 +51,8 @@ class App extends Component {
     return (
      <BrowserRouter>
       <Switch>
-        {this.getRoutes(routes)}
-        <Redirect from="/" to="/login"/>
+        <Container classname="main">{this.getRoutes(routes)}
+        <Redirect from="/" to="/login"/></Container>
       </Switch>
      </BrowserRouter>
     );

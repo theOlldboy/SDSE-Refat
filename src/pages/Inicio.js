@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import '../styles.css';
 import {Button, Container, Card, CardBody, CardHeader, Badge} from 'reactstrap';
+import Footer from '../components/Footer/footer';
 import {getToken, logout} from '../services/auth';
 
 function Inicio() {
@@ -13,7 +14,7 @@ function Inicio() {
     return(
         console.log(getToken()),
 
-        <Container>
+        <Container className="main">
         <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
         <Container>
         <Card>
@@ -27,6 +28,7 @@ function Inicio() {
 
         </Card>
         </Container>
+        <Footer />
         </Container>
     )
 } export default Inicio;
