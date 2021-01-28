@@ -103,9 +103,9 @@ import Footer from '../components/Footer/footer';
 
               <Row xs="2">
                 <Col><Button type="submit">Acessar</Button></Col>
-                <Col className="text-sm"><CardLink><Link to="/redef_senha">Esqueceu sua senha?</Link></CardLink></Col>
+                <Col className="text-sm"><CardLink><Link to="/recupera_senha">Esqueceu sua senha?</Link></CardLink></Col>
                 <Col></Col>
-                <Col className="text-sm"><CardLink>Primeiro Acesso?</CardLink></Col>
+                <Col className="text-sm"><CardLink><Link to="/primeiro_acesso">Primeiro Acesso?</Link></CardLink></Col>
               </Row>
 
             </CardBody>

@@ -8,18 +8,19 @@ import { Col, Container, Row, Badge, Card, CardBody, CardHeader, Button } from "
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 
-    const RedefSenha = () => (
+    const RecuSenha = () => (
         <div>
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
                 <Card>
-                <CardHeader>Defina uma nova senha para sua conta!</CardHeader>
+                <CardHeader>Preencha os campos abaixo e enviaremos um link em seu e-mail!</CardHeader>
                 <CardBody>
             <Formik
-                initialValues={{ senha: '', consenha: '' }}
+                initialValues={{ cnpj: '', email: '' }}
                 validationSchema={Yup.object().shape({
-                    senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
-                    consenha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),                })}
+                    cnpj: Yup.string().required('Campo Obrigatório!'),
+                    email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
+                })}
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));
@@ -28,11 +29,12 @@ import Footer from '../components/Footer/footer';
                 } }
             >
                 <Form>
-                    <Field name="senha"  label="Senha" type="password" component={ReactstrapInput} />
-                    
-                    <Field name="consenha" label="Confirme a Senha" type="password" component={ReactstrapInput} />
+                    <Field name="cnpj"  label="CNPJ" type="text" 
+                    tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
 
-                    <Button type="submit">Salvar</Button>
+                    <Field name="email" label="E-mail" type="email" component={ReactstrapInput} />
+
+                    <Button type="submit">Enviar</Button>
                 </Form>
             </Formik>
             </CardBody>
@@ -40,4 +42,4 @@ import Footer from '../components/Footer/footer';
             <Footer />
             </Container>
     </div>
-    );export default RedefSenha;
+    );export default RecuSenha;
