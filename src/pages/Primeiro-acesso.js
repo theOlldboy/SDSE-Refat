@@ -7,8 +7,13 @@ import { cnpjMask } from "../utils/Masks";
 import { Col, Container, Row, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
+import { useHistory } from 'react-router-dom';
+import api from '../services/api';
 
-    const PrimeiroAcesso = () => (
+    function PrimeiroAcesso() {
+        let history = useHistory();
+
+        return(
         <div>
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
@@ -21,13 +26,22 @@ import Footer from '../components/Footer/footer';
                     cnpj: Yup.string().required('Campo Obrigatório!'),
                     email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
                 })}
-                onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
+                onSubmit={async(values, { setSubmitting }) => {
+                    const cnpj = values.cnpj;
+                    const email = values.email;
+
+                    await api.post("/password-recovery", {cnpj}, {email}).then( response => {
+                        alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
+                        history.push('/login');
                         setSubmitting(false);
-                    }, 400);
+                    })
+                    .catch(error => {
+                        alert(error.response.data.message);
+                        console.log(values);
+                      });     
                 } }
             >
+            {({isSubmitting}) => (
                 <Form>
                     <Field name="cnpj"  label="CNPJ" type="text" 
                     tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
@@ -36,10 +50,12 @@ import Footer from '../components/Footer/footer';
 
                     <Button type="submit">Enviar</Button>
                 </Form>
+                )}
             </Formik>
             </CardBody>
             </Card>
             <Footer />
             </Container>
     </div>
-    );export default PrimeiroAcesso;
+    )
+    };export default PrimeiroAcesso;

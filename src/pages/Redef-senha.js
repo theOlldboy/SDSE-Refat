@@ -19,7 +19,7 @@ import Footer from '../components/Footer/footer';
                 initialValues={{ senha: '', consenha: '' }}
                 validationSchema={Yup.object().shape({
                     senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
-                    consenha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),                })}
+                    consenha: Yup.string().required('Campo Obrigatório!').oneOf([Yup.ref('senha'), null], 'As senhas devem ser iguais!'),                })}
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));
