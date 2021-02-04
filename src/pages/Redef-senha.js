@@ -2,9 +2,7 @@ import React from 'react';
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import { ReactstrapInput } from "reactstrap-formik";
-import MaskedInput from "react-text-mask";
-import { cnpjMask } from "../utils/Masks";
-import { Col, Container, Row, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 
@@ -19,7 +17,7 @@ import Footer from '../components/Footer/footer';
                 initialValues={{ senha: '', consenha: '' }}
                 validationSchema={Yup.object().shape({
                     senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
-                    consenha: Yup.string().required('Campo Obrigatório!').oneOf([Yup.ref('senha'), null], 'As senhas devem ser iguais!'),                })}
+                    consenha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),                })}
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));

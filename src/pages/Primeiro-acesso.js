@@ -4,16 +4,11 @@ import * as Yup from 'yup';
 import { ReactstrapInput } from "reactstrap-formik";
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
-import { Col, Container, Row, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
-import { useHistory } from 'react-router-dom';
-import api from '../services/api';
 
-    function PrimeiroAcesso() {
-        let history = useHistory();
-
-        return(
+    const PrimeiroAcesso = () => (
         <div>
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
@@ -26,22 +21,13 @@ import api from '../services/api';
                     cnpj: Yup.string().required('Campo Obrigatório!'),
                     email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
                 })}
-                onSubmit={async(values, { setSubmitting }) => {
-                    const cnpj = values.cnpj;
-                    const email = values.email;
-
-                    await api.post("/password-recovery", {cnpj}, {email}).then( response => {
-                        alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
-                        history.push('/login');
+                onSubmit={(values, { setSubmitting }) => {
+                    setTimeout(() => {
+                        alert(JSON.stringify(values, null, 2));
                         setSubmitting(false);
-                    })
-                    .catch(error => {
-                        alert(error.response.data.message);
-                        console.log(values);
-                      });     
+                    }, 400);
                 } }
             >
-            {({isSubmitting}) => (
                 <Form>
                     <Field name="cnpj"  label="CNPJ" type="text" 
                     tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
@@ -50,12 +36,10 @@ import api from '../services/api';
 
                     <Button type="submit">Enviar</Button>
                 </Form>
-                )}
             </Formik>
             </CardBody>
             </Card>
             <Footer />
             </Container>
     </div>
-    )
-    };export default PrimeiroAcesso;
+    );export default PrimeiroAcesso;

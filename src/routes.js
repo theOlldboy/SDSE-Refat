@@ -3,6 +3,7 @@ import Inicio from './pages/Inicio';
 import RedefSenha from './pages/Redef-senha';
 import RecuSenha from './pages/Recu-senha';
 import PrimeiroAcesso from './pages/Primeiro-acesso';
+import Doacoes from './pages/Doacoes';
 
 var routes = [
     {
@@ -30,6 +31,12 @@ var routes = [
         path: "/primeiro_acesso",
         name: "PrimeiroAcesso",
         component: PrimeiroAcesso
+    },
+    {
+        path: "/doacoes",
+        name: "Doacoes",
+        isAuth: true,
+        component: Doacoes
     }
 ];
 export default routes;
