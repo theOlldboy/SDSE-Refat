@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { ReactstrapInput } from "reactstrap-formik";
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
-import { Col, Container, Row, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 import { useHistory } from 'react-router-dom';
@@ -30,15 +30,15 @@ import api from '../services/api';
                     const cnpj = values.cnpj;
                     const email = values.email;
 
-                    await api.post("/password-recovery", {cnpj}, {email}).then( response => {
+                    await api.post("/password-firstaccess", {cnpj ,email}).then( response => {
                         alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
                         history.push('/login');
-                        setSubmitting(false);
+                        setSubmitting(false); 
                     })
                     .catch(error => {
                         alert(error.response.data.message);
-                        console.log(values);
-                      });     
+                        console.log(error);
+                      });                     
                 } }
             >
             {({isSubmitting}) => (

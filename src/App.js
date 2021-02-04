@@ -33,7 +33,7 @@ class App extends Component {
               key={key}
             />);
         }
-        if((prop.path === '/login' || prop.path === '/redef_senha') && getUser() !== null){
+        if((prop.path === '/login' || prop.path === '/redef_senha' || prop.path === '/cadastro_senha') && getUser() !== null){
           return (<Redirect from={prop.path} to='/inicio' />);
         }
         return (
