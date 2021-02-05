@@ -4,6 +4,7 @@ import RedefSenha from './pages/Redef-senha';
 import RecuSenha from './pages/Recu-senha';
 import PrimeiroAcesso from './pages/Primeiro-acesso';
 import Doacoes from './pages/Doacoes';
+import PrimeiraSenha from './pages/Primeira-senha';
 
 var routes = [
     {
@@ -18,9 +19,15 @@ var routes = [
         component: Inicio
     },
     {
-        path: "/redef_senha",
+        path: "/redef_senha/:token",
         name: "RedefSenha",
         component: RedefSenha
+    },
+    {
+        path: "/cadastro_senha/:token",
+        name: "PrimeiraSenha",
+        component: PrimeiraSenha
+
     },
     {
         path: "/recupera_senha",

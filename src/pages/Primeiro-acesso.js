@@ -21,11 +21,19 @@ import Footer from '../components/Footer/footer';
                     cnpj: Yup.string().required('Campo Obrigatório!'),
                     email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
                 })}
-                onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                    }, 400);
+                onSubmit={async(values, { setSubmitting }) => {
+                    const cnpj = values.cnpj;
+                    const email = values.email;
+
+                    await api.post("/password-firstaccess", {cnpj ,email}).then( response => {
+                        alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
+                        history.push('/login');
+                        setSubmitting(false); 
+                    })
+                    .catch(error => {
+                        alert(error.response.data.message);
+                        console.log(error);
+                      });  
                 } }
             >
                 <Form>
