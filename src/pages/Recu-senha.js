@@ -7,8 +7,14 @@ import { cnpjMask } from "../utils/Masks";
 import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
+import api from '../services/api'
+import { useHistory } from "react-router-dom";
 
-    const RecuSenha = () => (
+
+    function RecuSenha () {
+        
+        const history = useHistory();
+
         <div>
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
@@ -50,4 +56,4 @@ import Footer from '../components/Footer/footer';
             <Footer />
             </Container>
     </div>
-    );export default RecuSenha;
+    };export default RecuSenha;

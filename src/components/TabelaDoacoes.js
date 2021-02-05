@@ -4,7 +4,7 @@ import Paginacao from './Paginacao';
 import Api from '../services/api'
 import * as toast from '../utils/toasts'
 
-class TabelaPessoas extends Component {
+class TabelaDoacoes extends Component {
 
   state = {
     currentPage : 0,
@@ -12,13 +12,13 @@ class TabelaPessoas extends Component {
     dropdownOpenTipo : false,
     dropdownOpenStatus : false,
     showModalEdit: false,
-    showModalDel: false,
     solos : [],
-    tipos : []
+    tipos : [],
+    status : []
   }
 
   componentWillReceiveProps() {
-    this.setState({solos : this.props.solosEdit})
+    this.setState({solos : this.props.solos})
   }
 
    handlePageClick = (e, index) => {
@@ -38,56 +38,53 @@ class TabelaPessoas extends Component {
 
   toggleEdit = () => this.setState({showModalEdit: !this.state.showModalEdit})
 
-  toggleDel = () => this.setState({showModalDel: !this.state.showModalDel})
+  toggleTipo = () => this.setState({dropdownOpenTipo : !this.state.dropdownOpenTipo})
 
-  toggleDossie = () => this.setState({dropdownOpenDossie : !this.state.dropdownOpenDossie})
+  toggleStatus = () => this.setState({dropdownOpenStatus : !this.state.dropdownOpenStatus})
 
-  changeNome = (e) => this.setState({selected: {...this.state.selected, nome : e.target.value}})
-    
-  changeMatricula = (e) => this.setState({selected: {...this.state.selected, matricula : e.target.value}})
+  changeVolume = (e) => this.setState({selected: {...this.state.selected, volume : e.target.value}})
 
-  changeDossie = (e) => this.setState({
+  changeTipo = (e) => this.setState({
     selected : {...this.state.selected,
-      dossie : {
-          numero : e.target.textContent,
+      tipo : {
+          tipo : e.target.textContent,
+          id : e.target.value
+        }
+      }  
+    })
+    
+  changeStatus = (e) => this.setState({
+    selected : {...this.state.selected,
+      status : {
+          status : e.target.textContent,
           id : e.target.value
         }
       }  
     })
 
-  updatePessoa = () => {
-    const { nome, matricula, id } = this.state.selected;
-    const dossieId = this.state.selected.dossie.id
-    if (nome !== '') {
-      if (matricula !== 0 ) {
-          if (dossieId !== 0) {
-              Api.put(`pessoa/${id}`, {nome, matricula, dossieId}).then( () => {
+  updateSolo = () => {
+    const { volume } = this.state.selected;
+    const tipoId = this.state.selected.tipo.id
+    const statusId = this.state.selected.status.id
+    if (volume !== '') {
+      if (tipoId !== 0 ) {
+          if (statusId !== 0) {
+              Api.put(`solo/${id}`, {volume, tipoId, statusId}).then( () => {
                 const solos = this.state.solos.filter(p => this.state.selected.id !== p.id)
                 this.setState({solos : [this.state.selected].concat(solos)})
-                toast.sucesso("Dossiê atualizado com sucesso")
+                toast.sucesso("Doação atualizado com sucesso")
               }).catch( () => {
-                  toast.erro("Erro ao atualizar o dossiê")
+                  toast.erro("Erro ao atualizar a doação")
               })
           }else {
-              toast.erro("Informe a caixa do dossiê")
+              toast.erro("Informe o status da doação")
           }
       }else {
-          toast.erro("Informe a matrícula da pessoa")
+          toast.erro("Informe o tipo do solo")
       }
     }else {
-        toast.erro("Informe o nome da pessoa")
+        toast.erro("Informe o volume de solo da doação")
     }
-  }
-
-  deletePessoa = () => {
-    const { id } = this.state.selected;
-    Api.delete(`pessoa/${id}`).then( () => {
-      const solos = this.state.solos.filter(p => this.state.selected.id !== p.id)
-      this.setState({solos})
-      toast.sucesso("Dossiê excluído com sucesso")
-    }).catch( (err) => {
-        toast.erro("Erro ao excluir o dossiê")
-    })
   }
 
   render() {
@@ -96,29 +93,25 @@ class TabelaPessoas extends Component {
         <Table striped bordered dark hover hidden={this.props.hidden}>
             <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>Matrícula</th>
-                  <th>Caixa</th>
-                  <th>Armário</th>
-                  <th>Prateleira</th>
+                  <th>Volume</th>
+                  <th>Tipo</th>
+                  <th>Status</th>
                   <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
             {this.state.solos
               .slice(this.state.currentPage * 10, (this.state.currentPage + 1) * 10)
-              .map(pessoa => {
+              .map(solo => {
                 return (
-                  <React.Fragment key={pessoa.id}>
+                  <React.Fragment key={solo.id}>
                     <tr>
-                      <td>{pessoa.nome}</td>
-                      <td>{pessoa.matricula}</td>
-                      <td>{pessoa.dossie.numero}</td>
-                      <td>{pessoa.dossie.armario}</td>
-                      <td>{pessoa.dossie.prateleira}</td>
+                      <td>{solo.volume}</td>
+                      <td>{solo.tipo.tipo}</td>
+                      <td>{solo.status.status}</td>
                       <td>
-                        <Button onClick={() => {this.setState({selected : pessoa}); this.toggleEdit()}}>Editar</Button>
-                        <Button className='ml-3' onClick={() => {this.setState({selected : pessoa}); this.toggleDel()}}>Excluir</Button>                     </td>
+                        <Button onClick={() => {this.setState({selected : solo}); this.toggleEdit()}}>Editar</Button>
+                        <Button className='ml-3' onClick={() => {this.setState({selected : solo}); this.toggleDel()}}>Excluir</Button>                     </td>
                     </tr>
                   </React.Fragment>
                 );
@@ -133,30 +126,42 @@ class TabelaPessoas extends Component {
           handleNextClick={this.handleNextClick}
         />
         <Modal isOpen={this.state.showModalEdit} toggle={this.toggleEdit}>
-            <ModalHeader toggle={this.toggleEdit}>Editar dossiê</ModalHeader>
+            <ModalHeader toggle={this.toggleEdit}>Editar doação</ModalHeader>
             <ModalBody>
               <Form>
                   <FormGroup>
                     <Row form>
                         <Col>
-                            <Label for="nome">Nome</Label>
-                            <Input value={this.state.selected.nome} id="nome" onChange={this.changeNome}/>
+                            <Label for="volume">Volume (Kg)</Label>
+                            <Input value={this.state.selected.volume} id="volume" onChange={this.changeVolume}/>
                         </Col>
                       </Row>
                       <Row form>
                         <Col>
-                            <Label for="matricula">Matrícula</Label>
-                            <Input value={this.state.selected.matricula} id="matricula" className='w-50' onChange={this.changeMatricula}/>
-                        </Col>
-                        <Col>
-                            <ButtonDropdown isOpen={this.state.dropdownOpenDossie} toggle={this.toggleDossie}  className="pt-4">
+                            <ButtonDropdown isOpen={this.state.dropdownOpenTipo} toggle={this.toggleTipo}  className="pt-4">
                                 <DropdownToggle caret>
-                                    {this.state.selected.dossie.numero}
+                                    {this.state.selected.tipo.tipo}
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    {this.state.tipos.map(dossie => {
+                                    {this.state.tipos.map(tipo => {
                                         return(
-                                            <DropdownItem key={dossie.id} disabled={dossie.id === 0 ? true : false} onClick={this.changeDossie} value={dossie.id}>{dossie.numero}</DropdownItem>
+                                            <DropdownItem key={tipo.id} disabled={tipo.id === 0 ? true : false} onClick={this.changeTipo} value={tipo.id}>{tipo.tipo}</DropdownItem>
+                                        )
+                                    })}
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </Col>
+                    </Row>
+                      <Row form>
+                        <Col>
+                            <ButtonDropdown isOpen={this.state.dropdownOpenStatus} toggle={this.toggleStatus}  className="pt-4">
+                                <DropdownToggle caret>
+                                    {this.state.selected.status.status}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {this.state.status.map(status => {
+                                        return(
+                                            <DropdownItem key={status.id} disabled={status.id === 0 ? true : false} onClick={this.changeStatus} value={status.id}>{status.status}</DropdownItem>
                                         )
                                     })}
                                 </DropdownMenu>
@@ -167,19 +172,8 @@ class TabelaPessoas extends Component {
                 </Form>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={() => {this.updatePessoa(); this.toggleEdit()}}>Salvar</Button>
+                <Button color="primary" onClick={() => {this.updateSolo(); this.toggleEdit()}}>Salvar</Button>
                 <Button className='ml-3' color="secondary" onClick={this.toggleEdit}>Cancelar</Button>
-            </ModalFooter>
-        </Modal>
-        <Modal isOpen={this.state.showModalDel} toggle={this.toggleDel}>
-            <ModalHeader toggle={this.toggleDel}>Excluir dossiê</ModalHeader>
-            <ModalBody>
-            <p className=" text-center">Você tem certeza que deseja excluir o dossiê da pessoa<br/> <span className='font-weight-bold'>{this.state.selected.nome}</span>
-            , com a matrícula nº <span className='font-weight-bold'>{this.state.selected.matricula}</span>?</p>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={() => {this.deletePessoa(); this.toggleDel()}}>Sim, exclua</Button>
-                <Button className='ml-3' color="secondary" onClick={this.toggleDel}>Cancelar</Button>
             </ModalFooter>
         </Modal>
       </div>
@@ -187,4 +181,4 @@ class TabelaPessoas extends Component {
   }
 }
 
-export default TabelaPessoas;
+export default TabelaDoacoes;

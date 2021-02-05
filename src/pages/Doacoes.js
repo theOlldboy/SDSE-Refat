@@ -87,6 +87,7 @@ class Doacao extends Component {
                         </InputGroup>
                     </Row>
                     </CardBody>
+                    <TabelaDoacoes solos={this.state.doacoes} hidden={this.state.hidden}/>
                 </Card>
             </Container>
         )

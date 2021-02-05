@@ -52,8 +52,8 @@ class App extends Component {
      <BrowserRouter>
       <Switch>
         <Container classname="main">{this.getRoutes(routes)}
-        </Container>
         <Redirect exact={true} from="/" to="/login"/>
+        </Container>
       </Switch>
      </BrowserRouter>
     );
