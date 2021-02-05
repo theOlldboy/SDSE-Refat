@@ -39,7 +39,7 @@ export const setUser = ({name, email, phones}) => {
 };
 
 export const login = payload => {
-    const currentUser = Object.assign({}, payload.user, { token: payload.access_token });
+    const currentUser = Object.assign({}, { token: payload.access_token, user:  payload.empresa });
     localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     localStorage.setItem('@user-loc',JSON.stringify({lat : 0, lng : 0}));
 };

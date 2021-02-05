@@ -8,12 +8,20 @@ class Doacao extends Component {
 
     state = {
         doacoes : [],
-        hidden : true,
+        hidden : false,
         volume : '',
         latitute : '',
         longitude : '',
         dropdownOpenTipos : false,
         labelTipo : {tipo : 'Tipo de solo', id : 0}
+    }
+
+    componentWillMount() {
+        Api.get('solo-params').then(solos => {
+            this.setState({
+                doacoes : solos.data
+            })
+        })
     }
 
     hiddenTabela = () => this.setState({hidden : !this.state.hidden})

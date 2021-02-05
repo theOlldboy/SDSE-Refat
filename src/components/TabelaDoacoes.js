@@ -17,10 +17,6 @@ class TabelaDoacoes extends Component {
     status : []
   }
 
-  componentWillReceiveProps() {
-    this.setState({solos : this.props.solos})
-  }
-
    handlePageClick = (e, index) => {
     e.preventDefault();
     this.setState({currentPage: index});
@@ -100,15 +96,15 @@ class TabelaDoacoes extends Component {
                 </tr>
             </thead>
             <tbody>
-            {this.state.solos
+            {this.props.solos
               .slice(this.state.currentPage * 10, (this.state.currentPage + 1) * 10)
               .map(solo => {
                 return (
                   <React.Fragment key={solo.id}>
                     <tr>
                       <td>{solo.volume}</td>
-                      <td>{solo.tipo.tipo}</td>
-                      <td>{solo.status.status}</td>
+                      <td>{solo.tipo_solo.tipo}</td>
+                      <td>{solo.status_solo.status}</td>
                       <td>
                         <Button onClick={() => {this.setState({selected : solo}); this.toggleEdit()}}>Editar</Button>
                         <Button className='ml-3' onClick={() => {this.setState({selected : solo}); this.toggleDel()}}>Excluir</Button>                     </td>
@@ -119,7 +115,7 @@ class TabelaDoacoes extends Component {
             </tbody>
         </Table>
         <Paginacao hidden={this.props.hidden}
-          pagesCount={Math.round((this.state.solos.length / 10) + 0.5)}
+          pagesCount={Math.round((this.props.solos.length / 10) + 0.5)}
           currentPage={this.state.currentPage}
           handlePageClick={this.handlePageClick}
           handlePreviousClick={this.handlePreviousClick}
