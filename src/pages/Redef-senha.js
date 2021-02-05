@@ -9,7 +9,6 @@ import Footer from '../components/Footer/footer';
     function RedefSenha() {
         let {token} = this.props.match.params.token;
         return (
-        <div>
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
                 <Card>
@@ -39,5 +38,5 @@ import Footer from '../components/Footer/footer';
             </Card>
             <Footer />
             </Container>
-    </div>
-    )};export default RedefSenha;
+        )};
+export default RedefSenha;

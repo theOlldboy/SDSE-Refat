@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import { ReactstrapInput } from "reactstrap-formik";
@@ -8,13 +8,10 @@ import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 import api from '../services/api'
-import { useHistory } from "react-router-dom";
 
-    function PrimeiroAcesso () {
-
-        const history = useHistory();
-
-        <div>
+    class PrimeiroAcesso extends Component {
+        render(){
+        return (
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
                 <Card>
@@ -32,7 +29,7 @@ import { useHistory } from "react-router-dom";
 
                     await api.post("/password-firstaccess", {cnpj ,email}).then( response => {
                         alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
-                        history.push('/login');
+                        this.props.history.push('/login');
                         setSubmitting(false); 
                     })
                     .catch(error => {
@@ -54,5 +51,5 @@ import { useHistory } from "react-router-dom";
             </Card>
             <Footer />
             </Container>
-    </div>
-    };export default PrimeiroAcesso;
+        )}};
+export default PrimeiroAcesso;

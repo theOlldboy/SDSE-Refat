@@ -4,7 +4,6 @@ import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
 import './styles.css';
-import { Container } from 'reactstrap';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -33,7 +32,7 @@ class App extends Component {
               key={key}
             />);
         }
-        if((prop.path === '/login' || prop.path === '/redef_senha' || prop.path === '/cadastro_senha') && getUser() !== null){
+        if((prop.path === '/login' || prop.path === '/redef_senha' || prop.path === '/recupera_senha' || prop.path === '/cadastro_senha') && getUser() !== null){
           return (<Redirect from={prop.path} to='/inicio' />);
         }
         return (
@@ -50,10 +49,8 @@ class App extends Component {
   render() {
     return (
      <BrowserRouter>
-      <Switch>
-        <Container classname="main">{this.getRoutes(routes)}
+      <Switch>{this.getRoutes(routes)}
         <Redirect exact={true} from="/" to="/login"/>
-        </Container>
       </Switch>
      </BrowserRouter>
     );

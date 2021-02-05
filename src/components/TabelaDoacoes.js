@@ -63,7 +63,7 @@ class TabelaDoacoes extends Component {
     })
 
   updateSolo = () => {
-    const { volume } = this.state.selected;
+    const { id, volume } = this.state.selected;
     const tipoId = this.state.selected.tipo.id
     const statusId = this.state.selected.status.id
     if (volume !== '') {
