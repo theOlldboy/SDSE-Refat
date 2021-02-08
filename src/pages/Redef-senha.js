@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import { ReactstrapInput } from "reactstrap-formik";
 import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
 import "../styles.css";
 import Footer from '../components/Footer/footer';
+import api from '../services/api';
+import { getUser } from '../services/auth';
+import { Redirect } from 'react-router';
 
-    function RedefSenha() {
-        let {token} = this.props.match.params.token;
+    class RedefSenha extends Component {
+        render (){
+            if(getUser() !== null){
+                return (<Redirect from={this.props.path} to='/inicio' />);
+            }
         return (
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
@@ -19,11 +25,19 @@ import Footer from '../components/Footer/footer';
                 validationSchema={Yup.object().shape({
                     senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
                     consenha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),                })}
-                onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
+                onSubmit={async(values, { setSubmitting }) => {
+                    const senha = values.senha;
+                    const token = this.props.match.params.token;
+
+                    await api.post("/password-reset", {token, senha}).then( response => {
+                        alert("Senha redefinida com sucesso! Realize o Login.");
+                        // this.props.history.push('/login');
                         setSubmitting(false);
-                    }, 400);
+                    })
+                    .catch(error => {
+                        alert(error.response.data.message);
+                        console.log(error);
+                    });
                 } }
             >
                 <Form>
@@ -38,5 +52,6 @@ import Footer from '../components/Footer/footer';
             </Card>
             <Footer />
             </Container>
-        )};
+        )
+}}
 export default RedefSenha;

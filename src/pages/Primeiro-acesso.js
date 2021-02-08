@@ -8,9 +8,14 @@ import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 import api from '../services/api'
+import { getUser } from '../services/auth';
+import { Redirect } from 'react-router';
 
     class PrimeiroAcesso extends Component {
         render(){
+            if(getUser() !== null){
+                return (<Redirect from={this.props.path} to='/inicio' />);
+            }
         return (
             <Container className="main">
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>

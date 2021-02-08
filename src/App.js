@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
-import {getUser} from './services/auth';
 import routes from './routes';
 import { isAuthenticated } from "./services/auth";
 import './styles.css';
@@ -32,9 +31,7 @@ class App extends Component {
               key={key}
             />);
         }
-        if((prop.path === '/login' || prop.path === '/redef_senha' || prop.path === '/recupera_senha' || prop.path === '/cadastro_senha') && getUser() !== null){
-          return (<Redirect from={prop.path} to='/inicio' />);
-        }
+
         return (
           <Route
             path={prop.path}
