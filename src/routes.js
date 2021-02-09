@@ -5,6 +5,7 @@ import RecuSenha from './pages/Recu-senha';
 import PrimeiroAcesso from './pages/Primeiro-acesso';
 import Doacoes from './pages/Doacoes';
 import PrimeiraSenha from './pages/Primeira-senha';
+import Solicitacao from './pages/Solicitacao';
 
 var routes = [
     {
@@ -44,6 +45,12 @@ var routes = [
         name: "Doacoes",
         isAuth: true,
         component: Doacoes
+    },
+    {
+        path: "/solicitacao",
+        name: "Solicitacao",
+        isAuth: true,
+        component: Solicitacao
     }
 ];
 export default routes;
