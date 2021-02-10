@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {  Col, Label, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Container, Badge, Card, CardBody, CardTitle, InputGroup, Input, InputGroupAddon, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row } from 'reactstrap';
-import TabelaDoacoes from '../components/TabelaDoacoes'
+import TabelaSolicitacoes from '../components/TabelaSolicitacoes'
 import * as toast from '../utils/toasts'
 import Api from '../services/api'
 
@@ -8,7 +8,7 @@ class Solicitacao extends Component {
 
     state = {
         solicitacoes : [],
-        new : {volume : '', tipo_solo : {tipo: 'Tipo do solo', id : 0}, status_solo : {status : 'SOLICITAÇÃO - ABERTA', id : 0}},
+        new : {id: 0, volume : '', tipo_solo : {tipo: 'Tipo do solo', id : 0}, status_solo : {status : 'SOLICITAÇÃO - ABERTA', id : 2}},
         tipos : [],
         hidden : false,
         volume : '',
@@ -61,6 +61,7 @@ class Solicitacao extends Component {
 
     changeVolume = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
 
+    changeVolumeNew = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
     
     toggle = () => this.setState({showModal: !this.state.showModal})
 
@@ -74,7 +75,7 @@ class Solicitacao extends Component {
     buscarSolicitacao = async () => {
         const {volume} = this.state
         const tipoId = this.state.labelTipo.id
-        await Api.post('solos-data-params/', {volume,tipoId}).then( response => {
+        await Api.post('solos-solicitacao-data-params/', {volume,tipoId}).then( response => {
             this.setState({solicitacoes : response.data})
             if (this.state.solicitacoes.length <= 0){
                 toast.info("Nenhuma solicitação encontrada com os filtros informados")
@@ -87,29 +88,34 @@ class Solicitacao extends Component {
         }
     }
 
-    saveSolo = async () => {//Consultar aplicação do método
-      const { volume, latitute, longitude } = this.state.new;
-      const tipoSoloId = this.state.new.tipo_solo.id
-      if (volume !== '') {
-        if (tipoSoloId !== 0 ) {
-            await Api.post("solo/", {volume, tipoSoloId, latitute, longitude, statusSoloId : 1}).then(() => {
-                this.setState({solicitacoes : [this.state.new].concat(this.state.solicitacoes)})
-                if (this.state.solicitacoes.length !== 0 && this.state.hidden) {
-                    this.hiddenTabela()
-                }else if (this.state.solicitacoes.length === 0 && this.state.hidden === false){
-                    this.hiddenTabela()
-                }
-                toast.sucesso("Solicitação cadastrada com sucesso")
-            }).catch( () => {
-                toast.erro("Erro ao cadastrar a solicitação")
-            })
+    saveSolo = async () => {
+        const { volume } = this.state.new;
+        const tipoSoloId = this.state.new.tipo_solo.id
+        if (volume !== '') {
+          if (tipoSoloId !== 0 ) {
+              await Api.post("solo/", {volume, tipoSoloId, statusSoloId : 2}).then(response => {
+                  this.setState({new : {
+                      ...this.state.new,
+                      id: response.data.id
+                  }})
+                  this.setState({solicitacoes : [this.state.new].concat(this.state.solicitacoes)})
+                  if (this.state.solicitacoes.length !== 0 && this.state.hidden) {
+                      this.hiddenTabela()
+                  }else if (this.state.solicitacoes.length === 0 && this.state.hidden === false){
+                      this.hiddenTabela()
+                  }
+                  this.saveFile();
+                  toast.sucesso("Solicitação cadastrada com sucesso")
+              }).catch( () => {
+                  toast.erro("Erro ao cadastrar a solicitação")
+              })
+          }else {
+              toast.erro("Informe o tipo do solo")
+          }
         }else {
-            toast.erro("Informe o tipo do solo")
+            toast.erro("Informe o volume de solo da solicitação")
         }
-      }else {
-          toast.erro("Informe o volume de solo da solicitação")
       }
-    }
 
     render () {
         return (
@@ -123,7 +129,7 @@ class Solicitacao extends Component {
                     <Row className="pb-3">
                         <InputGroup>
                             <Input className='rounded-left' placeholder='Volume (Kg)' type='number' value={this.state.volume} onChange={this.changeVolume}/>
-                            <InputGroupAddon addonType="append"><Button className='rounded-right' onClick={this.buscarDoacao}>Buscar</Button></InputGroupAddon>
+                            <InputGroupAddon addonType="append"><Button className='rounded-right' onClick={this.buscarSolicitacao}>Buscar</Button></InputGroupAddon>
                             <ButtonDropdown className='ml-3' isOpen={this.state.dropdownOpen} toggle={this.toggleTipo}>
                                 <DropdownToggle caret>
                                     {this.state.labelTipo.tipo}
@@ -140,10 +146,10 @@ class Solicitacao extends Component {
                         </InputGroup>
                     </Row>
                     </CardBody>
-                    <TabelaDoacoes change={this.setDoacoes.bind(this)} solos={this.state.solicitacoes} tipos={this.state.tipos} hidden={this.state.hidden}/>
+                    <TabelaSolicitacoes change={this.setSolicitacoes.bind(this)} solos={this.state.solicitacoes} tipos={this.state.tipos} hidden={this.state.hidden}/>
                 </Card>
                 <Modal isOpen={this.state.showModal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Cadastrar solicitação</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Cadastrar solicitação</ModalHeader> 
                     <ModalBody>
                     <Form>
                         <FormGroup>

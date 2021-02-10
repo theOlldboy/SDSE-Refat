@@ -81,7 +81,7 @@ class Doacao extends Component {
     buscarDoacao = async () => {
         const {volume} = this.state
         const tipoId = this.state.labelTipo.id
-        await Api.post('solos-data-params/', {volume,tipoId}).then( response => {
+        await Api.post('solos-doacao-data-params/', {volume,tipoId}).then( response => {
             this.setState({doacoes : response.data})
             if (this.state.doacoes.length <= 0){
                 toast.info("Nenhuma doação encontrada com os filtros informados")
