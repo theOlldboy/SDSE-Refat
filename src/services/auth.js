@@ -46,5 +46,6 @@ export const login = payload => {
 
 export const logout = () => {
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem('@user-loc');
 }
 ;

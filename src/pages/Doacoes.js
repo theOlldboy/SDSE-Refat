@@ -8,7 +8,7 @@ class Doacao extends Component {
 
     state = {
         doacoes : [],
-        new : {volume : '', latitute : '', longitude : '', tipo_solo : {tipo: 'Tipo do solo', id : 0}, status_solo : {status : 'DOAÇÃO - DISPONÍVEL', id : 0}},
+        new : {id : 0, volume : '', latitude : '', longitude : '', tipo_solo : {tipo: 'Tipo do solo', id : 0}, status_solo : {status : 'DOAÇÃO - DISPONÍVEL', id : 1}},
         tipos : [],
         hidden : false,
         volume : '',
@@ -16,9 +16,13 @@ class Doacao extends Component {
         dropdownOpenNew : false,
         labelTipo : {tipo : 'Tipo de solo', id : 0},
         showModal: false,
+        modalAdd : {       
+          selectedFile: null
+        },
     }
 
     componentDidMount() {
+        this.getLoc()
         Api.post('solos-data-params').then(solos => {
             this.setState({
                 doacoes : solos.data
@@ -59,9 +63,11 @@ class Doacao extends Component {
           }  
         })
 
-    changeVolume = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
+    changeVolume = (e) => this.setState({volume : e.target.value})
 
-    changeLatLong = (lat, long) => this.setState({new: {...this.state.new, latitute : lat, longitude : long}})
+    changeVolumeNew = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
+
+    changeLatLong = (lat, long) => this.setState({new: {...this.state.new, latitude : lat, longitude : long}})
     
     toggle = () => this.setState({showModal: !this.state.showModal})
 
@@ -69,8 +75,6 @@ class Doacao extends Component {
         this.setState({
             labelTipo : {tipo : 'Tipo de solo', id : 0},
             volume : '',
-            latitute : '',
-            longitude : '',
         })
     }
 
@@ -91,17 +95,22 @@ class Doacao extends Component {
     }
 
     saveSolo = async () => {
-      const { volume, latitute, longitude } = this.state.new;
+      const { volume, latitude, longitude } = this.state.new;
       const tipoSoloId = this.state.new.tipo_solo.id
       if (volume !== '') {
         if (tipoSoloId !== 0 ) {
-            await Api.post("solo/", {volume, tipoSoloId, latitute, longitude, statusSoloId : 1}).then(() => {
+            await Api.post("solo/", {volume, tipoSoloId, latitude, longitude, statusSoloId : 1}).then(response => {
+                this.setState({new : {
+                    ...this.state.new,
+                    id: response.data.id
+                }})
                 this.setState({doacoes : [this.state.new].concat(this.state.doacoes)})
                 if (this.state.doacoes.length !== 0 && this.state.hidden) {
                     this.hiddenTabela()
                 }else if (this.state.doacoes.length === 0 && this.state.hidden === false){
                     this.hiddenTabela()
                 }
+                this.saveFile();
                 toast.sucesso("Doação cadastrada com sucesso")
             }).catch( () => {
                 toast.erro("Erro ao cadastrar a doação")
@@ -111,6 +120,58 @@ class Doacao extends Component {
         }
       }else {
           toast.erro("Informe o volume de solo da doação")
+      }
+    }
+
+    saveFile () {
+
+        let { modalAdd } = this.state;
+
+        let url = `/file-solo`;
+
+        const formData = new FormData();
+        formData.append('file', modalAdd.selectedFile);
+
+        Api({
+          method: 'post',
+          url,
+          data: formData,
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        .then((response) => {
+            toast.sucesso("Relatório PDF cadastrado com sucesso")
+
+            let modalAdd = {
+              selectedFile: null
+            };
+
+            this.setState({ modalAdd });
+        })
+        .catch((response) => {
+          console.log(response);
+        });
+    }
+
+    getLoc() {
+        var latitude = ''
+        var longitude = ''
+        if (navigator.geolocation) {
+            var startPos;
+          var geoSuccess = async (position) => {
+            if (position.coords.latitude != null){
+                startPos = position;
+                latitude = startPos.coords.latitude
+                longitude = startPos.coords.longitude
+                localStorage.setItem('@user-loc', JSON.stringify({lat : startPos.coords.latitude, lng : startPos.coords.longitude}));
+                this.changeLatLong(latitude, longitude)
+            }else{
+                localStorage.setItem('@user-loc',{});
+            }
+          };
+          navigator.geolocation.getCurrentPosition(geoSuccess);
+      }
+      else {
+        console.log('Geolocation is not supported for this Browser/OS.');
       }
     }
 
@@ -153,7 +214,7 @@ class Doacao extends Component {
                             <Row form>
                                 <Col>
                                     <Label for="volume">Volume (Kg)</Label>
-                                    <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolume}/>
+                                    <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolumeNew}/>
                                 </Col>
                                 <Col>
                                     <ButtonDropdown isOpen={this.state.dropdownOpenNew} toggle={this.toggleTipoNew}  className="pt-4">
@@ -169,6 +230,14 @@ class Doacao extends Component {
                                         </DropdownMenu>
                                     </ButtonDropdown>
                                 </Col>
+                                <div className="mt-3">
+                                    <label>Laudo de caracterização do solo</label>
+                                    <input type="file" onChange={(e) => {
+                                    let modalAdd = this.state.modalAdd;
+                                    modalAdd.selectedFile = e.target.files[0];
+                                    this.setState({ modalAdd });
+                                    }} name="file" required />
+                                </div>    
                             </Row>
                         </FormGroup>
                         </Form>
