@@ -16,7 +16,7 @@ class DoacoesDisponiveis extends Component {
     }
 
     componentDidMount() {
-        Api.post('solos-data-params').then(solos => {
+        Api.post('/solos-doacao-disp-data-params').then(solos => {
             this.setState({
                 doacoes : solos.data
             })
@@ -55,7 +55,7 @@ class DoacoesDisponiveis extends Component {
     buscarDoacao = async () => {
         const {volume} = this.state
         const tipoId = this.state.labelTipo.id
-        await Api.post('solos-doacao-data-params/', {volume,tipoId}).then( response => {
+        await Api.post('/solos-doacao-disp-data-params/', {volume,tipoId}).then( response => {
             this.setState({doacoes : response.data})
             if (this.state.doacoes.length <= 0){
                 toast.info("Nenhuma doação encontrada com os filtros informados")
