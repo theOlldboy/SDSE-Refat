@@ -17,13 +17,14 @@ class Doacao extends Component {
         labelTipo : {tipo : 'Tipo de solo', id : 0},
         showModal: false,
         modalAdd : {       
-          selectedFile: null
+            selectedFile: null,
+            soloId : 0
         },
     }
 
     componentDidMount() {
         this.getLoc()
-        Api.post('solos-data-params').then(solos => {
+        Api.post('solos-doacao-data-params').then(solos => {
             this.setState({
                 doacoes : solos.data
             })
@@ -104,6 +105,10 @@ class Doacao extends Component {
                     ...this.state.new,
                     id: response.data.id
                 }})
+                this.setState({modalAdd : {
+                    ...this.state.modalAdd,
+                    soloId: response.data.id
+                }})
                 this.setState({doacoes : [this.state.new].concat(this.state.doacoes)})
                 if (this.state.doacoes.length !== 0 && this.state.hidden) {
                     this.hiddenTabela()
@@ -131,6 +136,8 @@ class Doacao extends Component {
 
         const formData = new FormData();
         formData.append('file', modalAdd.selectedFile);
+        formData.append('soloId', modalAdd.soloId);
+        console.log(modalAdd.soloId)
 
         Api({
           method: 'post',

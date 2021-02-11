@@ -19,7 +19,7 @@ class Solicitacao extends Component {
     }
 
     componentDidMount() {
-        Api.post('solos-data-params').then(solos => {
+        Api.post('solos-solicitacao-data-params').then(solos => {
             this.setState({
                 solicitacoes : solos.data
             })
