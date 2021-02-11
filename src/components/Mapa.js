@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
 export default GoogleApiWrapper({
-  apiKey: ('AIzaSyAJWJvGO3fXRoOlq6ELP9MkoSBdVC1gCo4')
+  apiKey: (process.env.MAP_API)
 })(class Mapa extends Component {
 
     constructor (props){
