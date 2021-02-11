@@ -1,13 +1,21 @@
 import React, {Component} from 'react';
-import {Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Table, Form, FormGroup, Label, Button } from 'reactstrap';
+import {ListGroup, ListGroupItem, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Table, Form, FormGroup, Label, Button } from 'reactstrap';
 import Paginacao from './Paginacao';
+import Mapa from './Mapa';
+import PDFViewer from 'pdf-viewer-reactjs'
 
 class TabelaSolicitacoes extends Component {
   
   state = {
     currentPage : 0,
-    selected : {volume : '', tipo_solo : {tipo: 'Tipo do solo', id : 0}, status_solo : {status: 'Status do solo', id : 0}},
-    showModal: false
+    selected : {volume : '', 
+      tipo_solo : {tipo: 'Tipo do solo', id : 0}, 
+      status_solo : {status: 'Status do solo', id : 0},
+      empresa_user : {nome : '', telefone : '', cnpj : '', email: '', representante: ''},
+      file : {url : ''}
+    },
+    showModal: false,
+    places : []
   }
 
   componentWillReceiveProps() {
@@ -70,6 +78,20 @@ class TabelaSolicitacoes extends Component {
         <Modal isOpen={this.state.showModal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Informações sobre a doação</ModalHeader>
           <ModalBody>
+          <ListGroup>
+            <ListGroupItem>Empresa: {this.state.selected.empresa_user.nome}</ListGroupItem>
+            <ListGroupItem>Telefone: {this.state.selected.empresa_user.telefone}</ListGroupItem>
+            <ListGroupItem>CNPJ: {this.state.selected.empresa_user.cnpj}</ListGroupItem>
+            <ListGroupItem>E-mail: {this.state.selected.empresa_user.email}</ListGroupItem>
+            <ListGroupItem>Representante: {this.state.selected.empresa_user.representante}</ListGroupItem>
+          </ListGroup>
+          <PDFViewer
+              document={{
+                  url: this.state.selected.file.url,
+              }}/>
+          <div className='mapa'>
+            <Mapa places={this.state.places}></Mapa>
+          </div>
           </ModalBody>
           <ModalFooter>
           </ModalFooter>
