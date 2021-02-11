@@ -4,6 +4,7 @@ import RedefSenha from './pages/Redef-senha';
 import RecuSenha from './pages/Recu-senha';
 import PrimeiroAcesso from './pages/Primeiro-acesso';
 import Doacoes from './pages/Doacoes';
+import DoacoesDisponiveis from './pages/DoacoesDisponiveis';
 import PrimeiraSenha from './pages/Primeira-senha';
 import Solicitacao from './pages/Solicitacao';
 
@@ -51,6 +52,12 @@ var routes = [
         name: "Solicitacao",
         isAuth: true,
         component: Solicitacao
+    },
+    {
+        path: "/doacoes-disponiveis",
+        name: "DoacoesDisponiveis",
+        isAuth: true,
+        component: DoacoesDisponiveis
     }
 ];
 export default routes;

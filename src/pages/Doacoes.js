@@ -181,7 +181,7 @@ class Doacao extends Component {
                 <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
                 <Card className="p-3 mt-3">
                     <CardTitle><h3>Minhas doações
-                    <Button className='ml-5 bg-success' onClick={() => this.toggle()}>Cadastrar nova doação!</Button></h3>
+                    <Button className='ml-5 bg-success' onClick={() => this.toggle()}>Cadastrar nova doação</Button></h3>
                     </CardTitle>
                     <CardBody>
                     <Row className="pb-3">
