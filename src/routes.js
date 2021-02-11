@@ -3,10 +3,11 @@ import Inicio from './pages/Inicio';
 import RedefSenha from './pages/Redef-senha';
 import RecuSenha from './pages/Recu-senha';
 import PrimeiroAcesso from './pages/Primeiro-acesso';
+import PrimeiraSenha from './pages/Primeira-senha';
 import Doacoes from './pages/Doacoes';
 import DoacoesDisponiveis from './pages/DoacoesDisponiveis';
-import PrimeiraSenha from './pages/Primeira-senha';
 import Solicitacao from './pages/Solicitacao';
+import EdicaoDados from './pages/EdicaoDados';
 
 var routes = [
     {
@@ -58,6 +59,12 @@ var routes = [
         name: "DoacoesDisponiveis",
         isAuth: true,
         component: DoacoesDisponiveis
+    },
+    {
+        path: "/edicao-dados",
+        name: "EdicaoDados",
+        isAuth: true,
+        component: EdicaoDados
     }
 ];
 export default routes;
