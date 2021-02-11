@@ -59,7 +59,7 @@ class Solicitacao extends Component {
           }  
         })
 
-    changeVolume = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
+    changeVolume = (e) => this.setState({volume : e.target.value})
 
     changeVolumeNew = (e) => this.setState({new: {...this.state.new, volume : e.target.value}})
     
@@ -104,7 +104,6 @@ class Solicitacao extends Component {
                   }else if (this.state.solicitacoes.length === 0 && this.state.hidden === false){
                       this.hiddenTabela()
                   }
-                  this.saveFile();
                   toast.sucesso("Solicitação cadastrada com sucesso")
               }).catch( () => {
                   toast.erro("Erro ao cadastrar a solicitação")
@@ -157,7 +156,7 @@ class Solicitacao extends Component {
                             <Row form>
                                 <Col>
                                     <Label for="volume">Volume (Kg)</Label>
-                                    <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolume}/>
+                                    <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolumeNew}/>
                                 </Col>
                                 <Col>
                                     <ButtonDropdown isOpen={this.state.dropdownOpenNew} toggle={this.toggleTipoNew}  className="pt-4">
