@@ -82,6 +82,9 @@ class TabelaSolicitacoes extends Component {
             <ListGroupItem>E-mail: {this.state.selected.empresa_user.email}</ListGroupItem>
             <ListGroupItem>Representante: {this.state.selected.empresa_user.representante}</ListGroupItem>
           </ListGroup>
+          <div className='mapa'>
+            <Mapa place={this.state.selected}/>
+          </div>
           </ModalBody>
           <ModalFooter>
           </ModalFooter>
