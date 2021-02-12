@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {ListGroup, ListGroupItem, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Table, Form, FormGroup, Label, Button } from 'reactstrap';
+import { ListGroup, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter, Table, Button } from 'reactstrap';
 import Paginacao from './Paginacao';
 import Mapa from './Mapa';
-import PDFViewer from 'pdf-viewer-reactjs'
-
 class TabelaSolicitacoes extends Component {
   
   state = {
@@ -74,7 +72,6 @@ class TabelaSolicitacoes extends Component {
           handlePreviousClick={this.handlePreviousClick}
           handleNextClick={this.handleNextClick}
         />
-        
         <Modal isOpen={this.state.showModal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Informações sobre a doação</ModalHeader>
           <ModalBody>
@@ -85,13 +82,6 @@ class TabelaSolicitacoes extends Component {
             <ListGroupItem>E-mail: {this.state.selected.empresa_user.email}</ListGroupItem>
             <ListGroupItem>Representante: {this.state.selected.empresa_user.representante}</ListGroupItem>
           </ListGroup>
-          <PDFViewer
-              document={{
-                  url: this.state.selected.file.url,
-              }}/>
-          <div className='mapa'>
-            <Mapa places={this.state.places}></Mapa>
-          </div>
           </ModalBody>
           <ModalFooter>
           </ModalFooter>

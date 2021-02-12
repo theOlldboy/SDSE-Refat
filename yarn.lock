@@ -8108,19 +8108,6 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pdf-viewer-reactjs@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/pdf-viewer-reactjs/-/pdf-viewer-reactjs-2.2.2.tgz#fc7734024c197b016394621ae2208050c91004e5"
-  integrity sha512-ztXP2XBrl8D2fmDtG8P+nFt5QwsQwG8uKaCKITSH2L7vNmy9WZ0CQx0rhT5V0mpjjDmBZpR3CJIHSGx1CYD1lg==
-  dependencies:
-    pdfjs-dist "^2.6.347"
-    prop-types "^15.7.2"
-
-pdfjs-dist@^2.6.347:
-  version "2.6.347"
-  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.6.347.tgz#f257ed66e83be900cd0fd28524a2187fb9e25cd5"
-  integrity sha512-QC+h7hG2su9v/nU1wEI3SnpPIrqJODL7GTDFvR74ANKGq1AFJW16PH8VWnhpiTi9YcLSFV9xLeWSgq+ckHLdVQ==
-
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"

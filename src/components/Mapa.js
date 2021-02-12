@@ -9,7 +9,7 @@ export default GoogleApiWrapper({
         super(props)
         this.state = {
             selectedPlace : {
-                id: 0, lat:0, lng: 0,addresses : [{latitude : '0', longitude : '0'}]
+                id: 0, lat:0, lng: 0
             },
             selected : false
         }
@@ -20,7 +20,7 @@ export default GoogleApiWrapper({
       }
 
       open(place, selected) {
-        if(place.id != 0 && selected){
+        if(place.id !== 0 && selected){
            window.location.href = ``;
         }
       }
