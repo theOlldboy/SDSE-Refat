@@ -96,36 +96,47 @@ class Doacao extends Component {
     }
 
     saveSolo = async () => {
-      const { volume, latitude, longitude } = this.state.new;
-      const tipoSoloId = this.state.new.tipo_solo.id
-      if (volume !== '') {
-        if (tipoSoloId !== 0 ) {
-            await Api.post("solo/", {volume, tipoSoloId, latitude, longitude, statusSoloId : 1}).then(response => {
-                this.setState({new : {
-                    ...this.state.new,
-                    id: response.data.id
-                }})
-                this.setState({modalAdd : {
-                    ...this.state.modalAdd,
-                    soloId: response.data.id
-                }})
-                this.setState({doacoes : [this.state.new].concat(this.state.doacoes)})
-                if (this.state.doacoes.length !== 0 && this.state.hidden) {
-                    this.hiddenTabela()
-                }else if (this.state.doacoes.length === 0 && this.state.hidden === false){
-                    this.hiddenTabela()
+        const { volume, latitude, longitude } = this.state.new;
+        let { modalAdd } = this.state;
+        const tipoSoloId = this.state.new.tipo_solo.id
+        if(!!latitude && !!longitude){
+            if(volume !== '') {
+                if (tipoSoloId !== 0) {
+                    if (modalAdd.selectedFile !== null) {
+                        await Api.post("solo/", {volume, tipoSoloId, latitude, longitude, statusSoloId : 1}).then(response => {
+                            this.setState({new : {
+                                ...this.state.new,
+                                id: response.data.id
+                            }})
+                            this.setState({modalAdd : {
+                                ...this.state.modalAdd,
+                                soloId: response.data.id
+                            }})
+                            this.setState({doacoes : [this.state.new].concat(this.state.doacoes)})
+                            if (this.state.doacoes.length !== 0 && this.state.hidden) {
+                                this.hiddenTabela()
+                            }else if (this.state.doacoes.length === 0 && this.state.hidden === false){
+                                this.hiddenTabela()
+                            }
+                            this.saveFile();
+                            toast.sucesso("Doação cadastrada com sucesso")
+                            this.toggle();
+                        }).catch( () => {
+                            toast.erro("Erro ao cadastrar a doação")
+                        })
+                    }else {
+                        toast.erro("O PDF do laudo STP é obrigatório!")
+                    }
+                }else {
+                    toast.erro("Informe o tipo do solo")
                 }
-                this.saveFile();
-                toast.sucesso("Doação cadastrada com sucesso")
-            }).catch( () => {
-                toast.erro("Erro ao cadastrar a doação")
-            })
-        }else {
-            toast.erro("Informe o tipo do solo")
+            }else {
+                toast.erro("Informe o volume de solo da doação")
+            }
+        }else{
+            toast.info("Por favor, permita o acesso a sua localização para poder cadastrar novas doações no SDSE.")
+
         }
-      }else {
-          toast.erro("Informe o volume de solo da doação")
-      }
     }
 
     saveFile () {
@@ -137,7 +148,6 @@ class Doacao extends Component {
         const formData = new FormData();
         formData.append('file', modalAdd.selectedFile);
         formData.append('soloId', modalAdd.soloId);
-        console.log(modalAdd.soloId)
 
         Api({
           method: 'post',
@@ -162,30 +172,31 @@ class Doacao extends Component {
     getLoc() {
         var latitude = ''
         var longitude = ''
-        if (navigator.geolocation) {
-            var startPos;
-          var geoSuccess = async (position) => {
-            if (position.coords.latitude != null){
-                startPos = position;
-                latitude = startPos.coords.latitude
-                longitude = startPos.coords.longitude
-                localStorage.setItem('@user-loc', JSON.stringify({lat : startPos.coords.latitude, lng : startPos.coords.longitude}));
-                this.changeLatLong(latitude, longitude)
-            }else{
-                localStorage.setItem('@user-loc',{});
+        navigator.permissions.query({name:'geolocation'}).then(result => {
+            if (result.state === 'granted' || result.state === 'prompt') {
+                var startPos
+                var geoSuccess = async (position) => {
+                  if (position.coords.latitude != null){
+                      startPos = position;
+                      latitude = startPos.coords.latitude
+                      longitude = startPos.coords.longitude
+                      localStorage.setItem('@user-loc', JSON.stringify({lat : startPos.coords.latitude, lng : startPos.coords.longitude}));
+                      this.changeLatLong(latitude, longitude)
+                  }else{
+                      localStorage.setItem('@user-loc',{});
+                  }
+                };
+                navigator.geolocation.getCurrentPosition(geoSuccess);
+            } else if (result.state === 'denied') {
+                toast.info("Por favor, permita o acesso a sua localização para poder cadastrar novas doações no SDSE.")
             }
-          };
-          navigator.geolocation.getCurrentPosition(geoSuccess);
-      }
-      else {
-        console.log('Geolocation is not supported for this Browser/OS.');
-      }
+        });
     }
 
     render () {
         return (
             <Container className="main">
-                <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+                <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
                 <Card className="p-3 mt-3">
                     <CardTitle><h3>Minhas doações
                     <Button className='ml-5 bg-success' onClick={() => this.toggle()}>Cadastrar nova doação</Button></h3>
@@ -193,7 +204,7 @@ class Doacao extends Component {
                     <CardBody>
                     <Row className="pb-3">
                         <InputGroup>
-                            <Input className='rounded-left' placeholder='Volume (Kg)' type='number' value={this.state.volume} onChange={this.changeVolume}/>
+                            <Input className='rounded-left' placeholder='Volume (m³)' type='number' value={this.state.volume} onChange={this.changeVolume}/>
                             <InputGroupAddon addonType="append"><Button className='rounded-right' onClick={this.buscarDoacao}>Buscar</Button></InputGroupAddon>
                             <ButtonDropdown className='ml-3' isOpen={this.state.dropdownOpen} toggle={this.toggleTipo}>
                                 <DropdownToggle caret>
@@ -220,7 +231,7 @@ class Doacao extends Component {
                         <FormGroup>
                             <Row form>
                                 <Col>
-                                    <Label for="volume">Volume (Kg)</Label>
+                                    <Label for="volume">Volume (m³)</Label>
                                     <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolumeNew}/>
                                 </Col>
                                 <Col>
@@ -250,7 +261,7 @@ class Doacao extends Component {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => {this.saveSolo(); this.toggle()}}>Salvar</Button>
+                        <Button color="primary" onClick={this.saveSolo}>Salvar</Button>
                         <Button className='ml-3' color="secondary" onClick={this.toggle}>Cancelar</Button>
                     </ModalFooter>
                 </Modal>

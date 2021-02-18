@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import '../styles.css';
 import { Field, Form, Formik } from "formik";
 import { ReactstrapInput } from "reactstrap-formik";
-import {Button, Container, Row, Col, Card, CardBody, CardHeader, Badge, CardLink, CardTitle} from 'reactstrap';
+import {Button, Container, Card, CardBody, Badge, CardTitle} from 'reactstrap';
 import * as Yup from 'yup';
 import MaskedInput from "react-text-mask";
 import { cnpjMask, telefoneMask, cpfMask, cfdfMask } from "../utils/Masks";
 import api from '../services/api';
-import { Link, Redirect } from "react-router-dom";
 import Footer from '../components/Footer/footer';
 
 
@@ -16,7 +15,7 @@ import Footer from '../components/Footer/footer';
     render() { 
     return (
     <Container className="main">
-      <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+      <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
         <Card>
             <CardBody>
               <CardTitle>Dados empresariais</CardTitle>

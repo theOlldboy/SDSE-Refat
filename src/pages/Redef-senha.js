@@ -8,6 +8,7 @@ import Footer from '../components/Footer/footer';
 import api from '../services/api';
 import { getUser } from '../services/auth';
 import { Redirect } from 'react-router';
+import * as toast from '../utils/toasts'
 
     class RedefSenha extends Component {
         render (){
@@ -16,7 +17,7 @@ import { Redirect } from 'react-router';
             }
         return (
             <Container className="main">
-                <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+                <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
                 <Card>
                 <CardHeader>Defina uma nova senha para sua conta!</CardHeader>
                 <CardBody>
@@ -30,8 +31,8 @@ import { Redirect } from 'react-router';
                     const token = this.props.match.params.token;
 
                     await api.post("/password-reset", {token, senha}).then( response => {
-                        alert("Senha redefinida com sucesso! Realize o Login.");
-                        // this.props.history.push('/login');
+                        toast.sucesso("Senha redefinida com sucesso! Realize o Login!")
+                        this.props.history.push('/login');
                         setSubmitting(false);
                     })
                     .catch(error => {

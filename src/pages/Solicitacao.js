@@ -119,7 +119,7 @@ class Solicitacao extends Component {
     render () {
         return (
             <Container className="main">
-                <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+                <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
                 <Card className="p-3 mt-3">
                     <CardTitle><h3>Minhas solicitações
                     <Button className='ml-3 bg-success' onClick={() => this.toggle()}>Cadastrar solicitação</Button>
@@ -128,7 +128,7 @@ class Solicitacao extends Component {
                     <CardBody>
                     <Row className="pb-3">
                         <InputGroup>
-                            <Input className='rounded-left' placeholder='Volume (Kg)' type='number' value={this.state.volume} onChange={this.changeVolume}/>
+                            <Input className='rounded-left' placeholder='Volume (m³)' type='number' value={this.state.volume} onChange={this.changeVolume}/>
                             <InputGroupAddon addonType="append"><Button className='rounded-right' onClick={this.buscarSolicitacao}>Buscar</Button></InputGroupAddon>
                             <ButtonDropdown className='ml-3' isOpen={this.state.dropdownOpen} toggle={this.toggleTipo}>
                                 <DropdownToggle caret>
@@ -155,7 +155,7 @@ class Solicitacao extends Component {
                         <FormGroup>
                             <Row form>
                                 <Col>
-                                    <Label for="volume">Volume (Kg)</Label>
+                                    <Label for="volume">Volume (m³)</Label>
                                     <Input value={this.state.new.volume} type='number' id="volume" onChange={this.changeVolumeNew}/>
                                 </Col>
                                 <Col>

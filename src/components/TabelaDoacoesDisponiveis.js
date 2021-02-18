@@ -55,7 +55,7 @@ class TabelaSolicitacoes extends Component {
                 return (
                   <React.Fragment key={solo.id}>
                     <tr>
-                      <td>{solo.volume} Kg</td>
+                      <td>{solo.volume} m³</td>
                       <td>{solo.tipo_solo.tipo}</td>
                       <td>
                         <Button onClick={() => {this.setState({selected : solo}); this.toggle()}}>Mais +</Button></td>
@@ -82,6 +82,9 @@ class TabelaSolicitacoes extends Component {
             <ListGroupItem>E-mail: {this.state.selected.empresa_user.email}</ListGroupItem>
             <ListGroupItem>Representante: {this.state.selected.empresa_user.representante}</ListGroupItem>
           </ListGroup>
+            <button  className="button-pdf">
+              <a href={this.state.selected.file.url} download="laudoSTP">Baixar laudo STP! <i class="fa fa-file-pdf-o"></i></a>
+            </button>
           <div className='mapa'>
             <Mapa place={this.state.selected}/>
           </div>

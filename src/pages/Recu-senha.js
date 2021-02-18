@@ -10,6 +10,7 @@ import Footer from '../components/Footer/footer';
 import api from '../services/api'
 import { getUser } from '../services/auth';
 import { Redirect } from 'react-router';
+import * as toast from '../utils/toasts'
 
 
     class RecuSenha extends Component {
@@ -19,7 +20,7 @@ import { Redirect } from 'react-router';
             }
         return (
             <Container className="main">
-                <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+                <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
                 <Card>
                 <CardHeader>Preencha os campos abaixo e enviaremos um link em seu e-mail!</CardHeader>
                 <CardBody>
@@ -34,7 +35,7 @@ import { Redirect } from 'react-router';
                     const email = values.email;
 
                     await api.post("/password-recovery", {cnpj ,email}).then( response => {
-                        alert('Você receberá em breve um email no endereço fornecido para que possa criar uma nova senha para sua conta!')
+                        toast.sucesso("Você receberá em breve um email no endereço fornecido para criar uma nova senha para sua conta!")
                         this.props.history.push('/login');
                         setSubmitting(false); 
                     })

@@ -106,7 +106,7 @@ class TabelaDoacoes extends Component {
                 return (
                   <React.Fragment key={solo.id}>
                     <tr>
-                      <td>{solo.volume} Kg</td>
+                      <td>{solo.volume} m³</td>
                       <td>{solo.tipo_solo.tipo}</td>
                       <td>{solo.status_solo.status}</td>
                       <td>
@@ -131,7 +131,7 @@ class TabelaDoacoes extends Component {
                   <FormGroup>
                     <Row form>
                         <Col>
-                            <Label for="volume">Volume (Kg)</Label>
+                            <Label for="volume">Volume (m³)</Label>
                             <Input value={this.state.selected.volume} type='number' id="volume" onChange={this.changeVolume}/>
                         </Col>
                         <Col>

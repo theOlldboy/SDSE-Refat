@@ -8,7 +8,7 @@ class Inicio extends Component {
     render (){
     return(
         <Container className="main">
-        <h1 align="center">Sistema de Doação de Solo de Escavações <Badge>SDSE</Badge></h1>
+        <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
         <Container>
         <Card>
             <CardHeader>Selecione a opção que desejar!</CardHeader>
