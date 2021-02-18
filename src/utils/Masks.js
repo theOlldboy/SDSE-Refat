@@ -25,22 +25,13 @@ export function cfdfMask (){
   return [
   /[0-9]/,
   /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  "/",
-  /\d/,
-  /\d/,
   /\d/,
   /\d/,
   "-",
   /\d/,
-  /\d/
+  /\d/,
+  /\d/,
+  /\d/,
 ];
 } 
 export function cpfMask (){
@@ -67,8 +58,9 @@ export function telefoneMask (){
   /[0-9]/,
   /\d/,
   ")",
-  "",
+  " ",
   /\d/,
+  " ",
   /\d/,
   /\d/,
   /\d/,

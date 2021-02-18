@@ -23,19 +23,16 @@ export const getUser = () => {
     return JSON.parse(userStr);
 };
 
-// Atualizar mais pra frente
-export const setUser = ({name, email, phones}) => {
+export const setUser = (user) => {
     const userStr = localStorage.getItem(USER_KEY);
     if (!userStr) {
         return null;
     }
 
-    let user = JSON.parse(userStr);
-    user.name = name;
-    user.email = email;
-    user.phones = phones;
+    let userLocal = JSON.parse(userStr);
+    userLocal.user = user
 
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_KEY, JSON.stringify(userLocal));
 };
 
 export const login = payload => {

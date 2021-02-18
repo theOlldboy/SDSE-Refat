@@ -122,8 +122,7 @@ class Solicitacao extends Component {
                 <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
                 <Card className="p-3 mt-3">
                     <CardTitle><h3>Minhas solicitações
-                    <Button className='ml-3 bg-success' onClick={() => this.toggle()}>Cadastrar solicitação</Button>
-                    <Button className='ml-2 bg-primary' onClick={() => this.props.history.push("/doacoes-disponiveis")}>Ver doações disponíveis</Button></h3>
+                    <Button className='ml-3 bg-success' onClick={() => this.toggle()}>Cadastrar solicitação</Button></h3>
                     </CardTitle>
                     <CardBody>
                     <Row className="pb-3">

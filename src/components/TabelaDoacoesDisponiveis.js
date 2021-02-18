@@ -83,7 +83,7 @@ class TabelaSolicitacoes extends Component {
             <ListGroupItem>Representante: {this.state.selected.empresa_user.representante}</ListGroupItem>
           </ListGroup>
             <button  className="button-pdf">
-              <a href={this.state.selected.file.url} download="laudoSTP">Baixar laudo STP! <i class="fa fa-file-pdf-o"></i></a>
+              <a href={this.state.selected.file.url} download="laudoSTP">Baixar laudo de caractarização do solo<i class="fa fa-file-pdf-o"></i></a>
             </button>
           <div className='mapa'>
             <Mapa place={this.state.selected}/>
