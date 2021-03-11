@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import '../styles.css';
-import { Field, Form, Formik } from "formik";
-import { ReactstrapInput } from "reactstrap-formik";
-import {Button, Container, Row, Col, Card, CardBody, CardHeader, Badge, CardLink} from 'reactstrap';
+import {Button, Container, Row, Col, Card, CardBody, CardHeader, Badge, CardLink, Form, Input, Label, FormGroup} from 'reactstrap';
 import * as Yup from 'yup';
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
@@ -10,10 +8,57 @@ import { getUser, login } from '../services/auth';
 import api from '../services/api';
 import { Link, Redirect } from "react-router-dom";
 import Footer from '../components/Footer/footer';
+import * as toast from '../utils/toasts';
 
 
 
   class Login extends Component {
+
+    state = {//variavel que armazena dados do componente para serem usados por ele, e caso alguma das informações mude o render() é executado novamente
+      cnpj: '',
+      senha: ''
+  };
+
+  handleSubmit = async (e) => { //método responsável por interceptar o submit do form
+    e.preventDefault(); //evita comportamentos padrões do submit
+
+    const cnpj = this.state.cnpj;
+    const senha = this.state.password;
+
+    if (cnpj === "") return;// verifica se algo foi digitado para continuar processamento
+    if (senha === "") return;
+
+
+    await api.post('login/', {
+      cnpj,
+      senha
+  }).then( response => {
+      login(response.data);
+          this.props.history.push('/inicio');
+      })
+  .catch(error => {
+      toast.erro(error.response.data.message,{
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true
+          });
+      this.setState({
+        cnpj: '',
+        senha: '',
+      })
+  })
+};
+
+handleInputChange =  e => {
+  this.setState({cnpj : e.target.value});//armazena valor digitado no input no state
+};
+
+handleInputChangeSenha =  e => {
+  this.setState({senha : e.target.value});//armazena valor digitado no input no state
+};
+
     render() {  
     if(getUser() !== null){
         return (<Redirect from={this.props.path} to='/inicio' />);
@@ -24,48 +69,35 @@ import Footer from '../components/Footer/footer';
         <Card>
             <CardHeader>Seja bem vindo!</CardHeader>
             <CardBody>
-        <Formik
-              initialValues={{cnpj: '', senha: ''}}
-              validationSchema={Yup.object().shape({
-                cnpj: Yup.string().required('Campo Obrigatório!'),
-                senha: Yup.string().required('Campo Obrigatório!').min(6, 'A senha deve ter obrigatoriamente 6-8 caracteres!').max(8, 'Senha deve ter obrigatoriamente 6-8 caracteres!'),
-              })}
-              onSubmit={async(values, { setSubmitting }) => {          
-                const cnpj = values.cnpj;
-                const senha = values.senha;
-          
-                await api.post('login/', {cnpj, senha}).then(response => {
-                  login(response.data);
-                  this.props.history.push("/inicio");
-                })
-                  .catch(error => {
-                    alert(error.response.data.message);
-                    console.log(values);
-                  });
-              } }
-              >
-              <Form>
+              <Form onSubmit={this.handleSubmit}>
                 <Row>
                   <Col xs="12">
-                  <Field name="cnpj"  label="CNPJ" type="text" 
-                    tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
+                  <FormGroup>
+                  <Label for="cnpj">CNPJ</Label>
+                  <Input name="cnpj" id="cnpj" type="text" 
+                    tag={MaskedInput} mask={cnpjMask}
+                    onChange={this.handleInputChange} />
+                  </FormGroup>
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12">
-                  <Field name="senha"  label="Senha" type="password" component={ReactstrapInput} />
+                  <FormGroup>
+                  <Label for="senha">Senha</Label>
+                  <Input name="senha" id="senha" type="password"
+                  onChange={this.handleInputChangeSenha} />
+                  </FormGroup>
                   </Col>
                 </Row>
 
               <Row xs="2">
-                <Col><Button type="submit">Acessar</Button></Col>
+                <Col><Button type="submit" onClick={this.handleSubmit}>Acessar</Button></Col>
                 <Col className="text-sm"><CardLink><Link to="/recupera_senha">Esqueceu sua senha?</Link></CardLink></Col>
                 <Col></Col>
                 <Col className="text-sm"><CardLink><Link to="/primeiro_acesso">Primeiro Acesso?</Link></CardLink></Col>
               </Row>
 
               </Form>
-              </Formik>
             </CardBody>
         </Card>
       <Footer />

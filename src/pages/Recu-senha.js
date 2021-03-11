@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
-import { ReactstrapInput } from "reactstrap-formik";
 import MaskedInput from "react-text-mask";
 import { cnpjMask } from "../utils/Masks";
-import { Container, Badge, Card, CardBody, CardHeader, Button } from "reactstrap";
+import {Button, Container, Row, Col, Card, CardBody, CardHeader, Badge, Form, Input, Label, FormGroup} from 'reactstrap';
 import "../styles.css";
 import Footer from '../components/Footer/footer';
 import api from '../services/api'
@@ -14,6 +12,43 @@ import * as toast from '../utils/toasts'
 
 
     class RecuSenha extends Component {
+
+        state = {
+            cnpj: '',
+            email: ''
+        };
+
+    handleSubmit = async (e) => { //método responsável por interceptar o submit do form
+            e.preventDefault(); //evita comportamentos padrões do submit
+
+            const cnpj = this.state.cnpj;
+            const email = this.state.email;
+
+            if (cnpj === "") return;
+            if (email === "") return;
+
+            await api.post("/password-recovery", {cnpj ,email}).then( response => {
+                toast.sucesso("Você receberá em breve um email no endereço fornecido para criar uma nova senha para sua conta!")
+                this.props.history.push('/login');
+            })
+            .catch(error => {
+                alert(error.response.data.message);
+                console.log(error);
+                this.setState({
+                    cnpj: '',
+                    email: '',
+                  })
+              });
+    };
+
+    handleInputChange =  e => {
+        this.setState({cnpj : e.target.value});//armazena valor digitado no input no state
+      };
+      
+      handleInputChangeEmail =  e => {
+        this.setState({email : e.target.value});//armazena valor digitado no input no state
+      };
+
         render() {
             if(getUser() !== null){
                 return (<Redirect from={this.props.path} to='/inicio' />);
@@ -24,36 +59,32 @@ import * as toast from '../utils/toasts'
                 <Card>
                 <CardHeader>Preencha os campos abaixo e enviaremos um link em seu e-mail!</CardHeader>
                 <CardBody>
-            <Formik
-                initialValues={{ cnpj: '', email: '' }}
-                validationSchema={Yup.object().shape({
-                    cnpj: Yup.string().required('Campo Obrigatório!'),
-                    email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
-                })}
-                onSubmit={async(values, { setSubmitting }) => {
-                    const cnpj = values.cnpj;
-                    const email = values.email;
+                <Form onSubmit={this.handleSubmit}>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="cnpj">CNPJ</Label>
+                  <Input name="cnpj" id="cnpj" type="text" 
+                    tag={MaskedInput} mask={cnpjMask}
+                    onChange={this.handleInputChange} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="email">Email</Label>
+                  <Input name="email" id="email" type="text"
+                  onChange={this.handleInputChangeEmail} />
+                  </FormGroup>
+                  </Col>
+                </Row>
 
-                    await api.post("/password-recovery", {cnpj ,email}).then( response => {
-                        toast.sucesso("Você receberá em breve um email no endereço fornecido para criar uma nova senha para sua conta!")
-                        this.props.history.push('/login');
-                        setSubmitting(false); 
-                    })
-                    .catch(error => {
-                        alert(error.response.data.message);
-                        console.log(error);
-                      }); 
-                } }
-            >
-                <Form>
-                    <Field name="cnpj"  label="CNPJ" type="text" 
-                    tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
+              <Row xs="2">
+                <Col><Button type="submit" onClick={this.handleSubmit}>Acessar</Button></Col>
+              </Row>
 
-                    <Field name="email" label="E-mail" type="email" component={ReactstrapInput} />
-
-                    <Button type="submit">Enviar</Button>
-                </Form>
-            </Formik>
+              </Form>
             </CardBody>
             </Card>
             <Footer />

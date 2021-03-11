@@ -1,86 +1,166 @@
 import React, { Component } from 'react';
 import '../styles.css';
-import { Field, Form, Formik } from "formik";
 import { getUser, setUser } from '../services/auth';
-import { ReactstrapInput } from "reactstrap-formik";
-import {Button, Container, Card, CardBody, Badge, CardTitle} from 'reactstrap';
+import {Button, Container, Row, Col, Card, CardBody, Badge, Form, Input, Label, FormGroup, CardTitle} from 'reactstrap';
 import * as Yup from 'yup';
 import MaskedInput from "react-text-mask";
 import { cnpjMask, telefoneMask, cpfMask, cfdfMask } from "../utils/Masks";
 import api from '../services/api';
 import Footer from '../components/Footer/footer';
-import * as toast from '../utils/toasts'
+import * as toast from '../utils/toasts';
 
 
 
-  class EdicaoDados extends Component {
+  class EdicaoDados extends Component { 
+      state = {
+        nome: '',
+        cnpj: '',
+        cfdf: '',
+        email: '',
+        telefone: '',
+        representante: '',
+        cargo_representante: '',
+        cpf_representante: ''
+      };
+      componentDidMount(){
+        const user = getUser();
+        this.setState ({
+          nome: user.nome,
+          cnpj: user.cnpj,
+          cfdf: user.cfdf,
+          email: user.email,
+          telefone: user.telefone,
+          representante: user.representante,
+          cargo_representante: user.cargo_representante,
+          cpf_representante: user.cpf_representante
+        });
+      }
+      handleSubmit = async (e) => { //método responsável por interceptar o submit do form
+        e.preventDefault();
+
+        const nome = this.state.nome;
+        const cnpj = this.state.cnpj;
+        const cfdf = this.state.cfdf;
+        const email = this.state.email;
+        const telefone = this.state.telefone;
+        const representante = this.state.representante;
+        const cargo_representante = this.state.cargos_representante;
+        const cpf_representante = this.state.cpf_representante;
+
+        await api.put('empresa', {nome, cnpj, cfdf, email, telefone, representante, cargo_representante, cpf_representante}).then(response => {
+            toast.sucesso("Dados atualizados com sucesso!")
+            setUser(response.data)
+            this.props.history.push("/inicio")
+          })
+            .catch(error => {
+              alert(error);
+            });
+      };
+
+      handleInputChangeNome =  e => {
+        this.setState({nome : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeCNPJ =  e => {
+        this.setState({cnpj : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeCFDF =  e => {
+        this.setState({cfdf : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeTelefone =  e => {
+        this.setState({telefone : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeRep =  e => {
+        this.setState({representante : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeCargo =  e => {
+        this.setState({cargo_representante : e.target.value});//armazena valor digitado no input no state
+      };
+      handleInputChangeCPF =  e => {
+        this.setState({cpf_representante : e.target.value});//armazena valor digitado no input no state
+      };
+
     render() { 
-      const { user } = getUser()
-      const { nome, cnpj, cfdf, email, telefone, representante, cargo_representante, cpf_representante} = user;
     return (
     <Container className="mt-5 mb-5 main">
       <h1 align="center" className='mb-5'><Badge>SDSE</Badge></h1>
         <Card>
             <CardBody>
               <CardTitle>Dados empresariais</CardTitle>
-        <Formik
-              initialValues={{nome, cnpj, cfdf, email, telefone, representante, cargo_representante, cpf_representante }}
-              validationSchema={Yup.object().shape({
-                nome: Yup.string().required('Campo Obrigatório!'),
-                cnpj: Yup.string().required('Campo Obrigatório!'),
-                cfdf: Yup.string().required('Campo Obrigatório!'),
-                email: Yup.string().required('Campo Obrigatório!').email('E-mail inválido!'),
-                telefone: Yup.string().required('Campo Obrigatório!'),
-                representante: Yup.string().required('Campo Obrigatório!'),
-                cargo_representante: Yup.string().required('Campo Obrigatório!'),
-                cpf_representante: Yup.string().required('Campo Obrigatório!'),
-              })}
-              onSubmit={async(values, { setSubmitting }) => {          
-                const nome = values.nome;       
-                const cnpj = values.cnpj;
-                const cfdf = values.cfdf;
-                const email = values.email;
-                const telefone = values.telefone;
-                const representante = values.representante;
-                const cargo_representante = values.cargo_representante;
-                const cpf_representante = values.cpf_representante;
-          
-                await api.put('empresa', {nome, cnpj, cfdf, email, telefone, representante, cargo_representante, cpf_representante}).then(response => {
-                  toast.sucesso("Dados atualizados com sucesso!")
-                  setUser(response.data)
-                  this.props.history.push("/inicio")
-                })
-                  .catch(error => {
-                    alert(error);
-                  });
-              } }
-              >
-              <Form>
-                  <Field name="nome"  label="Nome" type="text" component={ReactstrapInput} />
+            <Form onSubmit={this.handleSubmit}>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="nome">Nome Fantasia</Label>
+                  <Input name="nome" id="nome" type="text"
+                    onChange={this.handleInputChangeNome} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="cnpj">CNPJ</Label>
+                  <Input name="cnpj" id="cnpj" type="text"
+                  tag={MaskedInput} mask={cnpjMask}
+                  onChange={this.handleInputChangeCNPJ} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="cfdf">CFDF</Label>
+                  <Input name="cfdf" id="cfdf" type="text"
+                  tag={MaskedInput} mask={cfdfMask}
+                    onChange={this.handleInputChangeCFDF} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="telefone">Telefone</Label>
+                  <Input name="telefone" id="telefone" type="text"
+                  tag={MaskedInput} mask={telefoneMask}
+                    onChange={this.handleInputChangeTelefone} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="representante">Nome do(a) Representante</Label>
+                  <Input name="representante" id="representante" type="text"
+                    onChange={this.handleInputChangeRep} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="cargo">Cargo do(a) Representante</Label>
+                  <Input name="cargo" id="cargo" type="text"
+                    onChange={this.handleInputChangeCargo} />
+                  </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12">
+                  <FormGroup>
+                  <Label for="cpf">CPF</Label>
+                  <Input name="cpf" id="cpf" type="text"
+                  tag={MaskedInput} mask={cpfMask}
+                    onChange={this.handleInputChangeCPF} />
+                  </FormGroup>
+                  </Col>
+                </Row>
 
-                  <Field name="telefone"  label="Telefone" type="text"
-                  tag={MaskedInput} mask={telefoneMask} component={ReactstrapInput} />
-
-                  <Field name="email"  label="Email" type="text" component={ReactstrapInput} />
-
-                  <Field name="cnpj"  label="CNPJ" type="text" 
-                  tag={MaskedInput} mask={cnpjMask} component={ReactstrapInput} />
-
-                  <Field name="cfdf"  label="CFDF" type="text"
-                  tag={MaskedInput} mask={cfdfMask} component={ReactstrapInput} />
-
-                  <Field name="representante"  label="Representante" type="text" component={ReactstrapInput} />
-
-                  <Field name="cargo_representante"  label="Cargo do Representante" type="text" component={ReactstrapInput} />
-
-                  <Field name="cpf_representante"  label="CPF do Representante" type="text"
-                  tag={MaskedInput} mask={cpfMask} component={ReactstrapInput} />
-
-                <Button type="submit">Salvar</Button>
-                <Button className="ml-3" type="reset">Limpar</Button>
+                <Row xs="2">
+                <Col><Button type="submit" onClick={this.handleSubmit}>Acessar</Button></Col>
+                <Col><Button type="reset">Limpar</Button></Col>
+                </Row>
 
               </Form>
-              </Formik>
             </CardBody>
         </Card>
       <Footer />
